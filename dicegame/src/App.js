@@ -1,7 +1,8 @@
 import Board from "./Board";
 import Button from "./Button";
 import { useState } from "react";
-import "./style.css";
+import "./App.css";
+import Logo from "./assets/logo.png";
 
 function random(n) {
   return Math.ceil(Math.random() * n);
@@ -27,6 +28,8 @@ function App() {
   return (
     <div className="App">
       <div>
+        <img src={Logo} className="App-logo" alt="주사위게임 로고" />
+        <h1 className="App-title">주사위게임</h1>
         <Button className="App-button" color="blue" onClick={handleRollClick}>
           던지기
         </Button>

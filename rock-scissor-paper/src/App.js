@@ -46,7 +46,7 @@ function App() {
     let num = Number(e.target.value);
     if (num > 9) num %= 10;
     if (num < 1) num = 1;
-    num = Math.floor(num); 
+    num = Math.floor(num);
     setBet(num);
   };
 
