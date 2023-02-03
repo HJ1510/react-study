@@ -1,0 +1,230 @@
+#### git commit  내역
+`git log`
+git commit 내역
+
+`git log --pretty=oneline`
+git commit 내역 간략하게
+
+`git config alias.history 'log --pretty=oneline'`
+alias 지정
+이후로
+`git history`로 호출 가능
+<br />
+
+#### git reset
+-HEAD
+기본은 가장 최근에 한 commit
+HEAD가 가리키는 commit이 working directory가 됨
+
+-git reset
+1.HEAD가 가리키는 commit을 지정(기본)
+2.staging area를 특정 commit의 내용으로 바꿈(옵션)
+3.working directory를 특정 commit의 내용으로 바꿈(옵션)
+
+// 커밋아이디는 전체 다 쓸 필요 없이 앞에 4자정도만 겹치지 않으면 됨
+
+`git reset --hard 커밋아이디`
+과거의 commit으로 돌아가고 싶을 때 
+커밋아이디의 상태로 staging area/working directory의 내용이 돌아감
+1,2,3
+commit 이후 작업들이 모두 삭제, 복구 불가
+
+`git reset --mixed 커밋아이디`
+커밋아이디의 상태로 staging area의 내용이 돌아감
+working directory는 바뀌지 않고 최근 모습 그대로
+1,2
+
+`git reset --soft 커밋아이디`
+staging area/working directory는 바뀌지 않고 최근 모습 그대로
+1
+
+커밋아이디 대신 HEAD^ 활용 가능 
+`git reset --hard HEAD^`
+바로 전 commit
+`git reset --hard HEAD~2`
+두번째 전 commit
+
+-git reset으로 이전 상태로 바꾼 로컬의 내용을 리모트에도 반영 하려면
+`git push origin +main`
+reset한 시점 이후의 commit 내역도 모두 reset됨
+
+!! git reset을 한다고 commit 자체가 모두 사라지는건 아님 커밋아이디는 히스토리에서 확인이 안될뿐 살아있음->커밋아이디를 활용하여 보이지 않는 commit의 상태로 복구도 가능
+커밋 아이디를 모를 경우 
+`git reflog`
+HEAD의 히스토리에서 커밋아이디 확인 가능
+
+-git tag
+`git tag 태그이름 커밋아이디`
+중요한 commit은 tag를 달아 관리 가능
+`git show 태그이름`
+<br />
+
+#### git branch
+-생성
+`git branch 새브랜치이름`
+
+-이동
+`git checkout 브랜치이름`
+'브랜치이름'의 브랜치로 이동
+
+-`git checkout -b 브랜치이름`
+'브랜치이름'의 브랜치 생성+이동
+
+-`git branch -d 브랜치이름`
+브랜치 삭제
+
+다른 브랜치에서 작업한 내용은 서로 영향을 주지 않음
+
+#### git merge
+main 브랜치의 내용을 sub의 브랜치로 가져오고 싶으면
+`git checkout sub`
+sub로 이동하고
+`git merge main`
+merge한 다음에는 바로
+`git commit`
+
+-merge 도중 Conflict 발생시
+1.충돌한 부분을 수정
+충돌한 부분을 확인하여 수정하면 됨
+======= 기호를 기준으로
+main 브랜치에서 했던 커밋이 위쪽에,
+sub브랜치에서 했던 커밋이 아래쪽에
+
+2.merge취소
+`git merge --abort`
+
+-특정 파일만 merge
+참고 https://junhobaik.github.io/git-specific-files-merge/
+
+-새로만든 브랜치에 push
+sub 브랜치로 이동 후 
+`git push`를 하면
+```fatal: The current branch premium has no upstream branch.```
+오류 발생
+remote repository에 처음 push할때는 upstream 설정 필요함 
+`git push --set-upstream origin sub`
+
+-3way-merge merge기준
+1.base에서 달라진 부분이 있는 것이 우선
+2.base와 다른 부분이 여럿이라면 conflict 발생
+
+-Fast-forward merge
+같은 선상에 있는 branch에서 앞부분에 있는 branch와 병합을 하면 commit을 새로 만들지 않고 병합하려는 branch의 commit으로 이동하게 됨
+
+#### HEAD vs branch
+둘 다 pointer
+
+HEAD 
+`git checkout 브랜치이름`
+:HEAD가 가리키는 commit이 working directory가 됨
+이때 HEAD는 commit을 직접 가리키지 않고 branch를 통해 간접적으로 가리키게 됨
+`git checkout 커밋아이디`
+:HEAD가 커밋아이디의 commit을 직접 가리키게 됨 (Detached HEAD)
+주사용처는 과거의 특정 commit에 새로운 branch를 만들고 싶을때
+
+branch
+:직접 commit을 가리키게 됨
+
+etc
+```
+git reset 커밋아이디: 커밋되지 않은 변경사항 버리거나 커밋 폐기
+
+git reset file명: 파일 staging 취소
+
+git checkout 커밋아이디: 커밋 되돌리기
+
+git checkout 브랜치: bracnch 전환
+
+git checkout 파일명: 워킹디렉토리에서 수정한 내용 취소하기(복구불가)
+
+git branch [새 브랜치 이름] : 새로운 브랜치를 생성
+git checkout -b [새 브랜치 이름] : 새로운 브랜치를 생성하고 그 브랜치로 바로 이동
+git branch -d [기존 브랜치 이름] : 브랜치 삭제
+git checkout [기존 브랜치 이름] : 그 브랜치로 이동
+git merge [기존 브랜치 이름] : 현재 브랜치에 다른 브랜치를 머지
+git merge --abort : 머지를 하다가 conflict가 발생했을 때, 일단은 머지 작업을 취소하고 이전 상태로 돌아감
+```
+<br />
+#### 협업에서 merge
+
+-협업 중에는 여러 사람이 같은 파일의 내용을 수정하는 경우가 많음. 이때 다른 사람이 먼저 commit-push를 한 경우 나는 바로 push를 할 수 없고 pull을 먼저 해야함
+
+-pull하는 과정에서 merge가 자연스럽게 이뤄지며 동시에 하나의 commit이 생김. pull할때 conflict 에러가 나면 해당 부분을 고치고 add한 다음 commit을 하면 pull이 완료되고 이후에 push 진행 가능
+<br />
+#### fetch (vs merge)
+-git fetch
+리모트 레파지토리의 내용을 가져오기만 하고 merge는 자동으로 되지 않음
+merge를 진행하면 conflict 에러가 나지 않는 한 바로 병합이 됨
+`git fatch`
+가져오기
+`git diff sub origin/sub`
+sub(local  repository)와 origin/sub(remote repository) 두 브랜치의 차이
+=>문제가 있을 때
+1.해당 코드 작성한 작성자에게 수정 요청
+2.직접 해결하고 git push
+`git merge origin/sub`
+origin/sub(remote repository)와 merge
+
+사용처: remote repository의 내용을 merge 전에 미리 점검, remote repository의 내용과 내가 작성한 코드 비교 등 검토를 해야 할 때
+
+`git pull` = `git fetch` + `git merge`
+
+#### git blame
+`git blame 파일경로/파일이름`
+파일이름의 내용을 한줄한줄 어떤 commit이 생성한 것인지 확인 가능 (파일 경로는 .git을 기준으로)
+`git show 커밋아이디`
+커밋아이디의 commit내용과 작성자 등의 정보 확인 가능
+<br />
+#### git revert
+`git revert 커밋아이디`
+커밋아이디에서 추가로 작성한 내용이 모두 사라지며 새로운 commit이 하나 더 생김 (파일 내용을 수정하고 commit을 따로 진행하는 것과 똑같음)
+-vs reset
+remote repository에 이미 push한 내용이 있을 경우 pull로 동기화를 시켜야하기때문에 reset 사용은 어려움.
+local  repository에서 push를 하려면 remote repository의 상태보다 이전 상태에서는 안됨
+
+`git revert 커밋아이디1..커밋아이디5`
+커밋아이디2부터 커밋아이디5까지 한번에 revert
+commit 역순으로 하나씩 revert 실행
+
+#### git rebase
+rebase 진행하면 commit history 구조 자체가 바뀜!
+-`git rebase 브랜치이름`
+베이스를 브랜치이름으로 재지정
+-`git rebase --continue`
+컨플릭스 발생한 rebase를 계속 진행
+-vs merge
+rebase는 새로운 commit만들지 않고 commit history가 상대적으로 깔끔
+결과는 merge와 차이가 없음
+두 브랜치가 합쳐졌다는 것을 기록으로 남겨야할때는 꼭 merge를 써야함
+<br />
+
+#### git stash 
+
+-`git stash`
+git이 작업내용을 따로 저장해둠
+최근 commit의 상태로 돌아가고 그 이후 작업한 내용은 모두 git stack에 따로 저장됨
+-`git stash list`
+stash 내역확인
+-`git stash apply`
+저장해둔 내용 불러오기
+-`git stash drop`
+git stash list에서 가장 최근 stash 삭제 `git stash drop 'stash@{0}'`로 특정 stash 지우기도 가능
+-`git stash pop`
+`git stash apply`+`git stash drop` 두가지 한번에
+`git stash pop 'stash@{0}'`로 stash 특정 가능
+
+
+1.임시저장:불필요한 commit 최소화
+2.branch 실수
+- git stash에 저장한 내용은 branch에 종속되지 않음
+- main에서 저장하고 sub에서 apply 가능
+-`git stash apply 'stash@{0}'(stash 아이디)`
+<br />
+#### 기타
+
+-`git log --pretty=oneline --all --graph`
+브랜치별로 히스토리 간략하게 보기
+-`git cherry-pick 커밋아이디`
+다른 브랜치의 내용을 가져올 때 통째로 merge하지 않고 특정 commit만 가져오는 것
+
+
