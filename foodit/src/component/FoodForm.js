@@ -1,37 +1,47 @@
 import { useState } from "react";
 
+function sanitize(type, value) {
+  switch (type) {
+    case "number":
+      return Number(value) || 0;
+
+    default:
+      return value;
+  }
+}
+
 function FoodForm() {
-  const [title, setTitle] = useState("");
-  const [calorie, setCalorie] = useState(0);
-  const [content, setContent] = useState("");
+  const [values, setValues] = useState({
+    title: "",
+    calorie: 0,
+    content: "",
+  });
 
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+    setValues((prevValue) => ({ ...prevValue, [name]: sanitize(type, value) }));
   };
 
-  const handleCalorieChange = (e) => {
-    const newCalorie = Number(e.target.value);
-    setCalorie(newCalorie);
-  };
-
-  const handleContentChange = (e) => {
-    setContent(e.target.value);
+  const handleSubmit = (e) => {
+    e.preventDefault(); // preventDefault(): 기본 동작 막는 함수
+    console.log(values);
   };
 
   return (
-    <form>
-      <input value={title} name="title" onChange={handleTitleChange}></input>
+    <form onSubmit={handleSubmit}>
+      <input value={values.title} name="title" onChange={handleChange}></input>
       <input
         type="number"
-        value={calorie}
+        value={values.calorie}
         name="calorie"
-        onChange={handleCalorieChange}
+        onChange={handleChange}
       ></input>
       <input
-        value={content}
+        value={values.content}
         name="content"
-        onChange={handleContentChange}
+        onChange={handleChange}
       ></input>
+      <button type="submit">확인</button>
     </form>
   );
 }
