@@ -10,7 +10,8 @@ function App() {
   const [hasNext, setHasNext] = useState(false);
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [loadingError, setLoadingError] = useState(null);
+
   const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
   const handleNewestClick = () => setOrder("createdAt");
@@ -26,9 +27,10 @@ function App() {
     let result;
     try {
       setIsLoading(true);
+      setLoadingError(null);
       result = await getReviews(options);
     } catch (err) {
-      console.error(err);
+      setLoadingError(err);
       return;
     } finally {
       setIsLoading(false);
@@ -63,6 +65,7 @@ function App() {
           더 보기
         </button>
       )}
+      {loadingError?.message && <span>{loadingError.message}</span>}
     </div>
   );
 }
