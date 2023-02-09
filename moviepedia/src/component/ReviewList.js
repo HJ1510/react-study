@@ -6,7 +6,9 @@ function formatDate(value) {
 }
 
 function ReviewListItem({ item, onDelete }) {
-  const handleDeleteClick = () => onDelete(item.id);
+  const handleDeleteClick = () => {
+    onDelete(item.id);
+  };
 
   return (
     <div className="ReviewListItem">
