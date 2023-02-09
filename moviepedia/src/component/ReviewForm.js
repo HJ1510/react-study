@@ -7,11 +7,16 @@ function ReviewForm() {
     title: "",
     rating: 0,
     content: "",
+    imgFile: null,
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (name, value) => {
     setValues((prevValues) => ({ ...prevValues, [name]: value }));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    handleChange(name, value);
   };
 
   const handleSubmit = (e) => {
@@ -21,25 +26,29 @@ function ReviewForm() {
 
   return (
     <form className="ReviewForm" onSubmit={handleSubmit}>
-      <FileInput />
+      <FileInput
+        name="imgFile"
+        value={values.imgFile}
+        onChange={handleChange}
+      />
       <input
         name="title"
         value={values.title}
         placeholder="title"
-        onChange={handleChange}
+        onChange={handleInputChange}
       />
       <input
         name="rating"
         type="number"
         value={values.rating}
         placeholder="rating"
-        onChange={handleChange}
+        onChange={handleInputChange}
       />
       <textarea
         name="content"
         value={values.content}
         placeholder="content"
-        onChange={handleChange}
+        onChange={handleInputChange}
       />
       <button type="sumbit">확인</button>{" "}
       {/** type="sumbit" -> onSubmit 이벤트 발생 */}
