@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./ReviewForm.css";
+import FileInput from "./FileInput";
 
 function ReviewForm() {
   const [values, setValues] = useState({
@@ -20,6 +21,7 @@ function ReviewForm() {
 
   return (
     <form className="ReviewForm" onSubmit={handleSubmit}>
+      <FileInput />
       <input
         name="title"
         value={values.title}
