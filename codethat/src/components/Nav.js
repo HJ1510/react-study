@@ -1,8 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Container from "./Container";
 import UserMenu from "./UserMenu";
 import logoImg from "../assets/logo.svg";
 import styles from "./Nav.module.css";
+
+// isActive 현재 페이지의 경로가 NavLink의 경로와 일치하면 true 반환
+function getLinkStyle({ isActive }) {
+  return{
+    textDecoration: isActive ? 'inderline' : undefined,
+  }
+}
 
 function Nav() {
   return (
@@ -13,10 +20,14 @@ function Nav() {
         </Link>
         <ul className={styles.menu}>
           <li>
-            <Link to="/courses">카탈로그</Link>
+            <NavLink to="/courses" style={getLinkStyle}>
+              카탈로그
+            </NavLink>
           </li>
           <li>
-            <Link to="/questions ">커뮤니티</Link>
+            <NavLink to="/questions" style={getLinkStyle}>
+              커뮤니티
+            </NavLink>
           </li>
           <li>
             <UserMenu />
