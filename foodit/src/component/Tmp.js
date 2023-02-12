@@ -1,26 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-function Tmp() {
-  const [first, setFirst] = useState(1);
-  const [second, setSecond] = useState(1);
-
-  const handleFirstClick = () => setFirst(first + 1);
-
-  const handleSecondClick = () => setSecond(second + 1);
+function Timer() {
+  const [second, setSecond] = useState(0);
 
   useEffect(() => {
-    console.log("렌더링 이후", first, second);
+    const timerId = setInterval(() => {
+      console.log('타이머 실행중 ... ');
+      setSecond((prevSecond) => prevSecond + 1);
+    }, 1000);
+    console.log('타이머 시작 🏁');
+
+    return () => {
+      clearInterval(timerId);
+      console.log('타이머 멈춤 ✋');
+    };
   }, []);
 
-  console.log("렌더링", first, second);
+  return <div>{second}</div>;
+}
+
+function Tmp() {
+  const [show, setShow] = useState(false);
+
+  const handleShowClick = () => setShow(true);
+  const handleHideClick = () => setShow(false);
 
   return (
     <div>
-      <h1>
-        {first}, {second}
-      </h1>
-      <button onClick={handleFirstClick}>First</button>
-      <button onClick={handleSecondClick}>Second</button>
+      {show && <Timer />}
+      <button onClick={handleShowClick}>보이기</button>
+      <button onClick={handleHideClick}>감추기</button>
     </div>
   );
 }
