@@ -1,0 +1,5 @@
+   6 npm uninstall node-sass
+   7 npm install -D node-sass
+   8 yarn remove node-sass
+   9 yarn add -D node-sass
+  10 yarn start
