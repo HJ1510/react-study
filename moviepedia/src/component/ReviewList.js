@@ -1,3 +1,4 @@
+import { useLocale } from "../contexts/LocaleContext";
 import Rating from "./Rating";
 import "./ReviewList.css";
 
@@ -7,6 +8,7 @@ function formatDate(value) {
 }
 
 function ReviewListItem({ item, onDelete }) {
+  const locale = useLocale();
   const handleDeleteClick = () => {
     onDelete(item.id);
   };
@@ -19,6 +21,7 @@ function ReviewListItem({ item, onDelete }) {
         <Rating value={item.rating} />
         <p>{formatDate(item.createdAt)}</p>
         <p>{item.content}</p>
+        <p>현재언어: {locale}</p>
         <button onClick={handleDeleteClick}>삭제</button>
       </div>
     </div>
